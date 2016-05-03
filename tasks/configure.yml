@@ -15,7 +15,7 @@
     src: etc/cacti/ss_get_mysql_stats.php.cnf.j2
     dest: /etc/cacti/ss_get_mysql_stats.php.cnf
     owner: root
-    group: root
-    mode: 0644
+    group: www-data
+    mode: 0640
   tags:
     - cacti-plugin-percona-configure-update-mysql-configuration-file

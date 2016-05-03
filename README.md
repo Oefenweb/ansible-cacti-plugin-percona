@@ -14,6 +14,10 @@ None
 
 * `cacti_server_client_dbuser`: [default: `cacti`]: The database user to use to login on the cacti client
 * `cacti_server_client_dbpass`: [default: ``]: The database password to use to login on the cacti client
+* `cacti_server_client_db_ssl`: [default: `true`]: Whether or not to use SSL to login on database on the cacti client
+* `cacti_server_client_db_ssl_key`: [default: `/etc/mysql/client-key.pem`]: The ca certificate file to login on database on the cacti client
+* `cacti_server_client_db_ssl_cert`: [default: `/etc/mysql/client-cert.pem`]: The ssl certificate file to login on database on the cacti client
+* `cacti_server_client_db_ssl_ca`: [default: `/etc/mysql/ca-cert.pem`]: The ssl key file to login on database on the cacti client
 
 ## Dependencies
 

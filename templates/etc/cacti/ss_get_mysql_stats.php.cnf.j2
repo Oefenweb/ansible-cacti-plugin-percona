@@ -1,10 +1,10 @@
 <?php
 // {{ ansible_managed }}
 
-$mysql_user = '{{ cacti_server_client_dbuser }}';
-$mysql_pass = '{{ cacti_server_client_dbpass }}';
+$mysql_user = '{{ cacti_server_client_dbuser | default('cacti') }}';
+$mysql_pass = '{{ cacti_server_client_dbpass | default('') }}';
 
-$mysql_ssl  = TRUE;   # Whether to use SSL to connect to MySQL.
-$mysql_ssl_key  = '/etc/mysql/client-key.pem';
-$mysql_ssl_cert = '/etc/mysql/client-cert.pem';
-$mysql_ssl_ca   = '/etc/mysql/ca-cert.pem';
+$mysql_ssl  = {{ 'TRUE' if cacti_server_client_db_ssl | default(true) else 'FALSE' }};   # Whether to use SSL to connect to MySQL.
+$mysql_ssl_key  = '{{ cacti_server_client_db_ssl_key | default('/etc/mysql/client-key.pem') }}';
+$mysql_ssl_cert = '{{ cacti_server_client_db_ssl_cert | default('/etc/mysql/client-cert.pem') }}';
+$mysql_ssl_ca   = '{{ cacti_server_client_db_ssl_ca | default('/etc/mysql/ca-cert.pem') }}';
