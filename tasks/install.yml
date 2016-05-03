@@ -1,0 +1,17 @@
+# tasks file for cacti-plugin-percona
+---
+- name: install | dependencies
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: cacti_plugin_percona_dependencies
+  tags:
+    - cacti-plugin-percona-install-dependencies
+
+- name: install | additional
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: cacti_plugin_percona_install
+  tags:
+    - cacti-plugin-percona-install-additional

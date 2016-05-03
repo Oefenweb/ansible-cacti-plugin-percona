@@ -1,0 +1,6 @@
+# defaults file for cacti-plugin-percona
+---
+cacti_plugin_percona_install: []
+
+cacti_server_client_dbuser: cacti
+cacti_server_client_dbpass: ''

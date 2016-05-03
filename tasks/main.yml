@@ -1,0 +1,19 @@
+# tasks file for cacti-plugin-percona
+---
+- include: repository.yml
+  tags:
+    - configuration
+    - cacti-plugin-percona
+    - cacti-plugin-percona-repository
+
+- include: install.yml
+  tags:
+    - configuration
+    - cacti-plugin-percona
+    - cacti-plugin-percona-install
+
+- include: configure.yml
+  tags:
+    - configuration
+    - cacti-plugin-percona
+    - cacti-plugin-percona-configure

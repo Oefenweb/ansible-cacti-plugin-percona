@@ -1,0 +1,21 @@
+# tasks file for cacti-server
+---
+- name: configure | update ssh configuration file
+  template:
+    src: etc/cacti/ss_get_by_ssh.php.cnf.j2
+    dest: /etc/cacti/ss_get_by_ssh.php.cnf
+    owner: root
+    group: www-data
+    mode: 0640
+  tags:
+    - cacti-plugin-percona-configure-update-ssh-configuration-file
+
+- name: configure | update mysql configuration file
+  template:
+    src: etc/cacti/ss_get_mysql_stats.php.cnf.j2
+    dest: /etc/cacti/ss_get_mysql_stats.php.cnf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - cacti-plugin-percona-configure-update-mysql-configuration-file

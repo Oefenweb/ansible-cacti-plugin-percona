@@ -1,0 +1,10 @@
+<?php
+// {{ ansible_managed }}
+
+$mysql_user = '{{ cacti_server_client_dbuser }}';
+$mysql_pass = '{{ cacti_server_client_dbpass }}';
+
+$mysql_ssl  = TRUE;   # Whether to use SSL to connect to MySQL.
+$mysql_ssl_key  = '/etc/mysql/client-key.pem';
+$mysql_ssl_cert = '/etc/mysql/client-cert.pem';
+$mysql_ssl_ca   = '/etc/mysql/ca-cert.pem';
