@@ -1,0 +1,3 @@
+# defaults file for cacti-plugin-percona
+---
+cacti_plugin_percona_install: []
