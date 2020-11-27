@@ -1,2 +1,5 @@
 # handlers file for cacti-plugin-percona
 ---
+- name: import templates
+  command: >
+    php {{ cacti_plugin_percona_import_template_php_path }} --filename=/usr/share/cacti/resource/percona/templates/cacti_host_template_percona_gnu_linux_server_ht_0.8.6i-sver1.0.3.xml --with-user-rras='1:2:3:4'

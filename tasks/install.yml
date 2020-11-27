@@ -4,6 +4,7 @@
   apt:
     name: "{{ cacti_plugin_percona_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
+  notify: import templates
   tags:
     - cacti-plugin-percona-install-dependencies
 
@@ -13,28 +14,3 @@
     state: "{{ apt_install_state | default('latest') }}"
   tags:
     - cacti-plugin-percona-install-additional
-
-- name: install | get plugins in "wrong" directory
-  shell: >
-    ls -1dt /usr/lib64/cacti/plugins/*
-  register: _plugins_in_wrong_directory
-  changed_when: false
-  tags:
-    - cacti-plugin-percona-get-plugins
-
-- name: install | create directory
-  file:
-    path: /usr/lib/cacti/plugins
-    state: directory
-  tags:
-    - cacti-plugin-percona-create-directory
-
-- name: install | create symlinks in correct directory
-  file:
-    src: "{{ item }}"
-    dest: "/usr/lib/cacti/plugins/{{ item | basename }}"
-    state: link
-    force: true
-  with_items: "{{ _plugins_in_wrong_directory.stdout_lines }}"
-  tags:
-    - cacti-plugin-percona-create-symlinks

@@ -1,3 +1,5 @@
 # defaults file for cacti-plugin-percona
 ---
 cacti_plugin_percona_install: []
+
+cacti_plugin_percona_import_template_php_path: /usr/share/cacti/cli/import_template.php
