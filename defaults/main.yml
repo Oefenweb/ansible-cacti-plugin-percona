@@ -1,5 +1,7 @@
 # defaults file for cacti-plugin-percona
 ---
-cacti_plugin_percona_install: []
-
+cacti_plugin_percona_version: 1.1.8
+cacti_plugin_percona_scripts_path: /usr/share/cacti/site/scripts
 cacti_plugin_percona_import_template_php_path: /usr/share/cacti/cli/import_template.php
+cacti_plugin_percona_ss_get_by_ssh_php_cnf: []
+cacti_plugin_percona_ss_get_mysql_stats_php_cnf: []

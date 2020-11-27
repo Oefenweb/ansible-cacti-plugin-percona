@@ -1,12 +1,8 @@
 # vars file for cacti-plugin-percona
 ---
-cacti_plugin_percona_repositories:
-  - type: deb
-    url: "http://repo.percona.com/apt {{ ansible_lsb.codename }}"
-    component: main
-  - type: deb-src
-    url: "http://repo.percona.com/apt {{ ansible_lsb.codename }}"
-    component: main
-
-cacti_plugin_percona_dependencies:
-  - percona-cacti-templates
+cacti_plugin_percona_downloads_path: /var/lib/ansible/cacti-plugin-percona/downloads
+cacti_plugin_percona_builds_path: /var/lib/ansible/cacti-plugin-percona/builds
+cacti_plugin_percona_release_path: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}/release/code/cacti"
+cacti_plugin_percona_config_path: /etc/cacti
+cacti_plugin_percona_ss_get_by_ssh_php_cnf_file: "{{ cacti_plugin_percona_config_path }}/ss_get_by_ssh.php.cnf"
+cacti_plugin_percona_ss_get_mysql_stats_php_cnf_file: "{{ cacti_plugin_percona_config_path }}/ss_get_mysql_stats.php.cnf"
