@@ -1,5 +1,7 @@
 # vars file for cacti-plugin-percona
 ---
+cacti_plugin_percona_dependencies:
+  - rsync
 cacti_plugin_percona_downloads_path: /var/lib/ansible/cacti-plugin-percona/downloads
 cacti_plugin_percona_builds_path: /var/lib/ansible/cacti-plugin-percona/builds
 cacti_plugin_percona_release_path: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}/release/code/cacti"

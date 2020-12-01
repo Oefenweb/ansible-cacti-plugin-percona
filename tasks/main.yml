@@ -1,5 +1,17 @@
 # tasks file for cacti-plugin-percona
 ---
+- name: install dependencies
+  apt:
+    name: "{{ cacti_plugin_percona_dependencies }}"
+    state: "{{ apt_install_state | default('latest') }}"
+    update_cache: true
+    cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
+  tags:
+    - configuration
+    - cacti-plugin-percona
+    - cacti-plugin-percona-install
+    - cacti-plugin-percona-install-dependencies
+
 - name: create directories
   file:
     path: "{{ item }}"
@@ -29,30 +41,33 @@
     - cacti-plugin-percona
     - cacti-plugin-percona-downloads
 
-- name: unpack
+- name: unarchive
   unarchive:
     src: "{{ cacti_plugin_percona_downloads_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}.tar.gz"
     dest: "{{ cacti_plugin_percona_builds_path }}"
+    owner: root
+    group: root
     creates: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}"
     copy: false
+  register: _unarchive
   tags:
     - configuration
     - cacti-plugin-percona
     - cacti-plugin-percona-unpack
 
 - name: fix make
-  command: >
-    sed -i -e 's/our\ \$SVN_REV\ \=\ .*\;/our\ \$SVN_REV\ \=\ 42\;/g' cacti/bin/pmp-cacti-template
-  args:
-    chdir: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}"
-    warn: false
+  lineinfile:
+    path: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}/cacti/bin/pmp-cacti-template"
+    regexp: '^our\ \$SVN_REV\ \=\ .*\;$'
+    line: 'our $SVN_REV = 42;'
   tags:
     - configuration
+    - cacti-plugin-percona
     - cacti-plugin-percona-templates
     - cacti-plugin-percona-templates-fix
 
 - name: make templates
-  shell: >
+  command: >
     ./make.sh nodocs
   args:
     chdir: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}"
@@ -63,12 +78,16 @@
     - _make_templates.stderr.find('ImportError') == -1
   tags:
     - configuration
+    - cacti-plugin-percona
     - cacti-plugin-percona-templates
     - cacti-plugin-percona-templates-make
 
 - name: install scripts
   shell: >
-    rsync \
+    true \
+    && test -d {{ cacti_plugin_percona_release_path }}/scripts/ \
+    && test -d {{ cacti_plugin_percona_scripts_path }}/ \
+    && rsync \
       -ai --checksum --delete \
       --chown=root:root \
       {{ cacti_plugin_percona_release_path }}/scripts/ss_* \
@@ -87,9 +106,9 @@
   template:
     src: "{{ item.lstrip('/') }}.j2"
     dest: "{{ item }}"
-    owner: root
-    group: root
-    mode: 0640
+    owner: "{{ cacti_plugin_percona_ss_get_x_php_cnf_user }}"
+    group: "{{ cacti_plugin_percona_ss_get_x_php_cnf_group }}"
+    mode: "{{ cacti_plugin_percona_ss_get_x_php_cnf_mode }}"
   with_items:
     - "{{ cacti_plugin_percona_ss_get_by_ssh_php_cnf_file }}"
     - "{{ cacti_plugin_percona_ss_get_mysql_stats_php_cnf_file }}"
@@ -101,13 +120,16 @@
 
 - name: import templates
   shell: >
-    find {{ cacti_plugin_percona_release_path }}/templates \
+    true \
+    && test -f {{ cacti_plugin_percona_import_template_php_path }} \
+    && find {{ cacti_plugin_percona_release_path }}/templates \
       -name '*.xml' \
       -print0 | \
       xargs -0 --no-run-if-empty -L1 -i'{}' \
-      php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' --with-user-rras='1:2:3:4'
+      php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' {{ cacti_plugin_percona_import_template_php_options | join(' ') }}
   args:
     warn: false
+  when: _unarchive is changed
   tags:
     - configuration
     - cacti-plugin-percona
