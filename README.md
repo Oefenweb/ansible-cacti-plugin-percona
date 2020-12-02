@@ -8,6 +8,7 @@ Set up [Percona MySQL Monitoring Template](https://www.percona.com/doc/percona-m
 #### Requirements
 
 * `rsync` (will be installed)
+* `perl-modules` (will be installed)
 * `php` (will **not** be installed)
 
 #### Variables

@@ -55,7 +55,7 @@
     - cacti-plugin-percona
     - cacti-plugin-percona-unpack
 
-- name: fix make
+- name: patch pmp-cacti-template
   lineinfile:
     path: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}/cacti/bin/pmp-cacti-template"
     regexp: '^our\ \$SVN_REV\ \=\ .*\;$'
@@ -64,23 +64,50 @@
     - configuration
     - cacti-plugin-percona
     - cacti-plugin-percona-templates
-    - cacti-plugin-percona-templates-fix
+    - cacti-plugin-percona-templates-patch
+    - cacti-plugin-percona-templates-patch-pmp-cacti-template
+
+- name: patch make.sh
+  lineinfile:
+    path: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}/make.sh"
+    line: 'exit;'
+    insertbefore: '^\#\ Generate\ Zabbix'
+  tags:
+    - configuration
+    - cacti-plugin-percona
+    - cacti-plugin-percona-templates
+    - cacti-plugin-percona-templates-patch
+    - cacti-plugin-percona-templates-patch-make-sh
 
 - name: make templates
   command: >
-    ./make.sh nodocs
+    ./make.sh
   args:
     chdir: "{{ cacti_plugin_percona_builds_path }}/percona-monitoring-plugins-{{ cacti_plugin_percona_version }}"
     creates: "{{ cacti_plugin_percona_release_path }}/templates"
-  register: _make_templates
-  failed_when:
-    - _make_templates.rc != 0
-    - _make_templates.stderr.find('ImportError') == -1
   tags:
     - configuration
     - cacti-plugin-percona
     - cacti-plugin-percona-templates
     - cacti-plugin-percona-templates-make
+
+- name: import templates
+  shell: >
+    true \
+    && test -f {{ cacti_plugin_percona_import_template_php_path }} \
+    && find {{ cacti_plugin_percona_release_path }}/templates \
+      -name '*.xml' \
+      -print0 | \
+      xargs -0 --no-run-if-empty -L1 -i'{}' \
+      php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' {{ cacti_plugin_percona_import_template_php_options | join(' ') }}
+  args:
+    warn: false
+  when: _unarchive is changed
+  tags:
+    - configuration
+    - cacti-plugin-percona
+    - cacti-plugin-percona-templates
+    - cacti-plugin-percona-templates-import
 
 - name: install scripts
   shell: >
@@ -117,21 +144,3 @@
     - cacti-plugin-percona
     - cacti-plugin-percona-scripts
     - cacti-plugin-percona-scripts-configure
-
-- name: import templates
-  shell: >
-    true \
-    && test -f {{ cacti_plugin_percona_import_template_php_path }} \
-    && find {{ cacti_plugin_percona_release_path }}/templates \
-      -name '*.xml' \
-      -print0 | \
-      xargs -0 --no-run-if-empty -L1 -i'{}' \
-      php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' {{ cacti_plugin_percona_import_template_php_options | join(' ') }}
-  args:
-    warn: false
-  when: _unarchive is changed
-  tags:
-    - configuration
-    - cacti-plugin-percona
-    - cacti-plugin-percona-templates
-    - cacti-plugin-percona-templates-import
