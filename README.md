@@ -7,13 +7,16 @@ Set up [Percona MySQL Monitoring Template](https://www.percona.com/doc/percona-m
 
 #### Requirements
 
-* `rsync` (will be installed)
+* `git` (will be installed)
 * `perl-modules` (will be installed)
+* `rsync` (will be installed)
 * `php` (will **not** be installed)
 
 #### Variables
 
-* `cacti_plugin_percona_version`: [default: `1.1.8`]: What version of Percona MySQL Monitoring Template to set up.
+* `cacti_plugin_percona_git_repo`: [default: `https://github.com/tersmitten/percona-monitoring-plugins.git`]: Percona MySQL Monitoring Template git repo (e.g. `https://github.com/percona/percona-monitoring-plugins.git`)
+* `cacti_plugin_percona_version`: [default: `1.1.9`]: Only used in `{{ cacti_plugin_percona_git_version }}` (e.g. `1.1.8`)
+* `cacti_plugin_percona_git_version`: [default: `"{{ cacti_plugin_percona_version }}"`]: What version of Percona MySQL Monitoring Template to check out (set up). This can be the full 40-character SHA-1 hash, the literal string HEAD, a branch name, or a tag name
 * `cacti_plugin_percona_scripts_path`: [default: `/usr/share/cacti/site/scripts`]: Path of to `import_template.php`
 * `cacti_plugin_percona_import_template_php_path`: [default: `/usr/share/cacti/cli/import_template.php`]:
 * `cacti_plugin_percona_import_template_php_options`: [default: `[]`]: Options to pass to `import_template.php` (e.g. ['--remove-orphans'])

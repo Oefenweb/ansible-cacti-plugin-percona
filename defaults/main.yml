@@ -1,6 +1,8 @@
 # defaults file for cacti-plugin-percona
 ---
-cacti_plugin_percona_version: 1.1.8
+cacti_plugin_percona_git_repo: https://github.com/tersmitten/percona-monitoring-plugins.git
+cacti_plugin_percona_version: 1.1.9
+cacti_plugin_percona_git_version: "{{ cacti_plugin_percona_version }}"
 cacti_plugin_percona_scripts_path: /usr/share/cacti/site/scripts
 cacti_plugin_percona_import_template_php_path: /usr/share/cacti/cli/import_template.php
 cacti_plugin_percona_import_template_php_options: []
