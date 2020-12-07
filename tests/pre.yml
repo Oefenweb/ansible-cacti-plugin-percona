@@ -1,0 +1,21 @@
+# pre test file for cacti-server
+---
+- name: pre | create directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "{{ cacti_plugin_percona_scripts_path }}"
+    - "{{ cacti_plugin_percona_import_template_php_path | dirname }}"
+
+- name: pre | create binaries
+  file:
+    src: /bin/true
+    dest: "{{ item }}"
+    state: link
+  with_items:
+    - /usr/bin/php
+    - "{{ cacti_plugin_percona_import_template_php_path }}"

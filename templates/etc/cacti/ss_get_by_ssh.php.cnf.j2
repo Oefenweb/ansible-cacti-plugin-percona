@@ -1,0 +1,6 @@
+<?php
+{{ ansible_managed | comment('c') }}
+
+{% for line in cacti_plugin_percona_ss_get_by_ssh_php_cnf | default([]) %}
+{{ line }}
+{% endfor %}

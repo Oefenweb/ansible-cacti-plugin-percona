@@ -1,0 +1,12 @@
+# vars file for cacti-plugin-percona
+---
+cacti_plugin_percona_dependencies:
+  - git
+  - rsync
+  - perl-modules
+
+cacti_plugin_percona_checkout_path: /var/lib/ansible/cacti-plugin-percona/checkouts/cacti-plugin-percona
+cacti_plugin_percona_release_path: "{{ cacti_plugin_percona_checkout_path }}/release/code/cacti"
+cacti_plugin_percona_config_path: /etc/cacti
+cacti_plugin_percona_ss_get_by_ssh_php_cnf_file: "{{ cacti_plugin_percona_config_path }}/ss_get_by_ssh.php.cnf"
+cacti_plugin_percona_ss_get_mysql_stats_php_cnf_file: "{{ cacti_plugin_percona_config_path }}/ss_get_mysql_stats.php.cnf"

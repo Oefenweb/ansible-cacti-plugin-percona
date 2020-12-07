@@ -1,0 +1,9 @@
+# test file for cacti-plugin-percona
+---
+- hosts: localhost
+  connection: local
+  become: true
+  pre_tasks:
+    - include: pre.yml
+  roles:
+    - ../../
