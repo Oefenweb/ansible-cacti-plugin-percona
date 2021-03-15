@@ -1,4 +1,4 @@
-# defaults file for cacti-plugin-percona
+# defaults file
 ---
 cacti_plugin_percona_git_repo: https://github.com/tersmitten/percona-monitoring-plugins.git
 cacti_plugin_percona_version: 1.1.9

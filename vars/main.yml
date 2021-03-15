@@ -1,4 +1,4 @@
-# vars file for cacti-plugin-percona
+# vars file
 ---
 cacti_plugin_percona_dependencies:
   - git
