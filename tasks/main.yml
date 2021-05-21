@@ -41,77 +41,77 @@
 
 - block:
 
-  - name: patch pmp-cacti-template
-    lineinfile:
-      path: "{{ cacti_plugin_percona_checkout_path }}/cacti/bin/pmp-cacti-template"
-      regexp: '^our\ \$SVN_REV\ \=\ .*\;$'
-      line: 'our $SVN_REV = 42;'
-    tags:
-      - cacti-plugin-percona-templates
-      - cacti-plugin-percona-templates-patch
-      - cacti-plugin-percona-templates-patch-pmp-cacti-template
+    - name: patch pmp-cacti-template
+      lineinfile:
+        path: "{{ cacti_plugin_percona_checkout_path }}/cacti/bin/pmp-cacti-template"
+        regexp: '^our\ \$SVN_REV\ \=\ .*\;$'
+        line: 'our $SVN_REV = 42;'
+      tags:
+        - cacti-plugin-percona-templates
+        - cacti-plugin-percona-templates-patch
+        - cacti-plugin-percona-templates-patch-pmp-cacti-template
 
-  - name: patch make.sh
-    lineinfile:
-      path: "{{ cacti_plugin_percona_checkout_path }}/make.sh"
-      line: 'exit;'
-      insertbefore: '^\#\ Generate\ Zabbix'
-    tags:
-      - cacti-plugin-percona-templates
-      - cacti-plugin-percona-templates-patch
-      - cacti-plugin-percona-templates-patch-make-sh
+    - name: patch make.sh
+      lineinfile:
+        path: "{{ cacti_plugin_percona_checkout_path }}/make.sh"
+        line: 'exit;'
+        insertbefore: '^\#\ Generate\ Zabbix'
+      tags:
+        - cacti-plugin-percona-templates
+        - cacti-plugin-percona-templates-patch
+        - cacti-plugin-percona-templates-patch-make-sh
 
-  - name: make templates
-    command: >
-      ./make.sh
-    args:
-      chdir: "{{ cacti_plugin_percona_checkout_path }}"
-    tags:
-      - cacti-plugin-percona-templates
-      - cacti-plugin-percona-templates-make
+    - name: make templates
+      command: >
+        ./make.sh
+      args:
+        chdir: "{{ cacti_plugin_percona_checkout_path }}"
+      tags:
+        - cacti-plugin-percona-templates
+        - cacti-plugin-percona-templates-make
 
-  - name: import templates
-    shell: >
-      true \
-      && test -f {{ cacti_plugin_percona_import_template_php_path }} \
-      && find {{ cacti_plugin_percona_release_path }}/templates \
-        -name '*.xml' \
-        -print0 | \
-        xargs -0 --no-run-if-empty -L1 -i'{}' \
-        php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' {{ cacti_plugin_percona_import_template_php_options | join(' ') }}
-    args:
-      chdir: "{{ cacti_plugin_percona_checkout_path }}"
-      warn: false
-    tags:
-      - cacti-plugin-percona-templates
-      - cacti-plugin-percona-templates-import
+    - name: import templates
+      shell: >
+        true \
+        && test -f {{ cacti_plugin_percona_import_template_php_path }} \
+        && find {{ cacti_plugin_percona_release_path }}/templates \
+          -name '*.xml' \
+          -print0 | \
+          xargs -0 --no-run-if-empty -L1 -i'{}' \
+          php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' {{ cacti_plugin_percona_import_template_php_options | join(' ') }}
+      args:
+        chdir: "{{ cacti_plugin_percona_checkout_path }}"
+        warn: false
+      tags:
+        - cacti-plugin-percona-templates
+        - cacti-plugin-percona-templates-import
 
-  - name: install scripts
-    shell: >
-      true \
-      && test -d {{ cacti_plugin_percona_release_path }}/scripts/ \
-      && test -d {{ cacti_plugin_percona_scripts_path }}/ \
-      && rsync \
-        -ai --checksum --delete \
-        --chown=root:root \
-        {{ cacti_plugin_percona_release_path }}/scripts/ss_* \
-        {{ cacti_plugin_percona_scripts_path }}/
-    args:
-      warn: false
-    register: _scripts_copy
-    changed_when: _scripts_copy.stdout_lines | length > 0
-    tags:
-      - cacti-plugin-percona-scripts
-      - cacti-plugin-percona-scripts-install
+    - name: install scripts
+      shell: >
+        true \
+        && test -d {{ cacti_plugin_percona_release_path }}/scripts/ \
+        && test -d {{ cacti_plugin_percona_scripts_path }}/ \
+        && rsync \
+          -ai --checksum --delete \
+          --chown=root:root \
+          {{ cacti_plugin_percona_release_path }}/scripts/ss_* \
+          {{ cacti_plugin_percona_scripts_path }}/
+      args:
+        warn: false
+      register: _scripts_copy
+      changed_when: _scripts_copy.stdout_lines | length > 0
+      tags:
+        - cacti-plugin-percona-scripts
+        - cacti-plugin-percona-scripts-install
 
-  - name: cleanup
-    shell: >
-      git reset --hard && git clean -d -x -f
-    args:
-      chdir: "{{ cacti_plugin_percona_checkout_path }}"
-    tags:
-      - cacti-plugin-percona-cleanup
-      - cacti-plugin-percona-cleanup-build
+    - name: cleanup
+      shell: >
+        git reset --hard && git clean -d -x -f
+      args:
+        chdir: "{{ cacti_plugin_percona_checkout_path }}"
+      tags:
+        - cacti-plugin-percona-cleanup
+        - cacti-plugin-percona-cleanup-build
 
   when: _git_checkout is changed
   tags:

@@ -1,6 +1,6 @@
 # pre test file
 ---
-- name: pre | create directories
+- name: create directories
   file:
     path: "{{ item }}"
     state: directory
@@ -11,7 +11,7 @@
     - "{{ cacti_plugin_percona_scripts_path }}"
     - "{{ cacti_plugin_percona_import_template_php_path | dirname }}"
 
-- name: pre | create binaries
+- name: create binaries
   file:
     src: /bin/true
     dest: "{{ item }}"
