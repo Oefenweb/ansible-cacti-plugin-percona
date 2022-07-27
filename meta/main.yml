@@ -1,13 +1,12 @@
 # meta file
 ---
 galaxy_info:
-  namespace: oefenweb
+  author: oefenweb
   role_name: cacti_plugin_percona
-  author: Mischa ter Smitten
   company: Oefenweb.nl B.V.
   description: Set up Percona Monitoring Plugins for Nagios in Debian-like systems
   license: MIT
-  min_ansible_version: 2.9.0
+  min_ansible_version: 2.10.0
   platforms:
     - name: Ubuntu
       versions:

@@ -1,7 +1,7 @@
 # tasks file
 ---
 - name: install dependencies
-  apt:
+  ansible.builtin.apt:
     name: "{{ cacti_plugin_percona_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
     update_cache: true
@@ -12,7 +12,7 @@
     - cacti-plugin-percona-dependencies
 
 - name: create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root
@@ -28,7 +28,7 @@
     - cacti-plugin-percona-directories-create
 
 - name: checkout repository
-  git:
+  ansible.builtin.git:
     repo: "{{ cacti_plugin_percona_git_repo }}"
     dest: "{{ cacti_plugin_percona_checkout_path }}"
     version: "{{ cacti_plugin_percona_git_version }}"
@@ -39,10 +39,11 @@
     - cacti-plugin-percona
     - cacti-plugin-percona-checkout
 
-- block:
+- name: install
+  block:
 
     - name: patch pmp-cacti-template
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "{{ cacti_plugin_percona_checkout_path }}/cacti/bin/pmp-cacti-template"
         regexp: '^our\ \$SVN_REV\ \=\ .*\;$'
         line: 'our $SVN_REV = 42;'
@@ -52,7 +53,7 @@
         - cacti-plugin-percona-templates-patch-pmp-cacti-template
 
     - name: patch make.sh
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "{{ cacti_plugin_percona_checkout_path }}/make.sh"
         line: 'exit;'
         insertbefore: '^\#\ Generate\ Zabbix'
@@ -62,7 +63,7 @@
         - cacti-plugin-percona-templates-patch-make-sh
 
     - name: make templates
-      command: >
+      ansible.builtin.command: >
         ./make.sh
       args:
         chdir: "{{ cacti_plugin_percona_checkout_path }}"
@@ -71,7 +72,7 @@
         - cacti-plugin-percona-templates-make
 
     - name: import templates
-      shell: >
+      ansible.builtin.shell: >
         true \
         && test -f {{ cacti_plugin_percona_import_template_php_path }} \
         && find {{ cacti_plugin_percona_release_path }}/templates \
@@ -87,7 +88,7 @@
         - cacti-plugin-percona-templates-import
 
     - name: install scripts
-      shell: >
+      ansible.builtin.shell: >
         true \
         && test -d {{ cacti_plugin_percona_release_path }}/scripts/ \
         && test -d {{ cacti_plugin_percona_scripts_path }}/ \
@@ -105,7 +106,7 @@
         - cacti-plugin-percona-scripts-install
 
     - name: cleanup
-      shell: >
+      ansible.builtin.shell: >
         git reset --hard && git clean -d -x -f
       args:
         chdir: "{{ cacti_plugin_percona_checkout_path }}"
@@ -119,7 +120,7 @@
     - cacti-plugin-percona
 
 - name: update configuration files
-  template:
+  ansible.builtin.template:
     src: "{{ item.lstrip('/') }}.j2"
     dest: "{{ item }}"
     owner: "{{ cacti_plugin_percona_ss_get_x_php_cnf_user }}"
