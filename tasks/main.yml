@@ -39,7 +39,7 @@
     - cacti-plugin-percona
     - cacti-plugin-percona-checkout
 
-- name: install
+- name: install  # noqa no-handler
   block:
 
     - name: patch pmp-cacti-template
@@ -67,6 +67,7 @@
         ./make.sh
       args:
         chdir: "{{ cacti_plugin_percona_checkout_path }}"
+      changed_when: true
       tags:
         - cacti-plugin-percona-templates
         - cacti-plugin-percona-templates-make
@@ -83,6 +84,7 @@
       args:
         chdir: "{{ cacti_plugin_percona_checkout_path }}"
         warn: false
+      changed_when: true
       tags:
         - cacti-plugin-percona-templates
         - cacti-plugin-percona-templates-import
@@ -105,11 +107,12 @@
         - cacti-plugin-percona-scripts
         - cacti-plugin-percona-scripts-install
 
-    - name: cleanup
+    - name: cleanup  # noqa command-instead-of-module
       ansible.builtin.shell: >
         git reset --hard && git clean -d -x -f
       args:
         chdir: "{{ cacti_plugin_percona_checkout_path }}"
+      changed_when: true
       tags:
         - cacti-plugin-percona-cleanup
         - cacti-plugin-percona-cleanup-build
