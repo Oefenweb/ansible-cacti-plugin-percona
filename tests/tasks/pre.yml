@@ -1,7 +1,7 @@
 # pre test file
 ---
 - name: create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: root
@@ -12,7 +12,7 @@
     - "{{ cacti_plugin_percona_import_template_php_path | dirname }}"
 
 - name: create binaries
-  file:
+  ansible.builtin.file:
     src: /bin/true
     dest: "{{ item }}"
     state: link
