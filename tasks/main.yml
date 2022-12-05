@@ -72,7 +72,7 @@
         - cacti-plugin-percona-templates
         - cacti-plugin-percona-templates-make
 
-    - name: import templates
+    - name: import templates  # noqa command-instead-of-module
       ansible.builtin.shell: >
         true \
         && test -f {{ cacti_plugin_percona_import_template_php_path }} \
@@ -83,13 +83,12 @@
           php {{ cacti_plugin_percona_import_template_php_path }} --filename='{}' {{ cacti_plugin_percona_import_template_php_options | join(' ') }}
       args:
         chdir: "{{ cacti_plugin_percona_checkout_path }}"
-        warn: false
       changed_when: true
       tags:
         - cacti-plugin-percona-templates
         - cacti-plugin-percona-templates-import
 
-    - name: install scripts
+    - name: install scripts  # noqa command-instead-of-module
       ansible.builtin.shell: >
         true \
         && test -d {{ cacti_plugin_percona_release_path }}/scripts/ \
@@ -99,8 +98,6 @@
           --chown=root:root \
           {{ cacti_plugin_percona_release_path }}/scripts/ss_* \
           {{ cacti_plugin_percona_scripts_path }}/
-      args:
-        warn: false
       register: _scripts_copy
       changed_when: _scripts_copy.stdout_lines | length > 0
       tags:
