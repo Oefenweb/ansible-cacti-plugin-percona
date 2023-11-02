@@ -44,7 +44,7 @@ None
 ---
 - hosts: all
   roles:
-    - cacti-plugin-percona
+    - oefenweb.cacti-plugin-percona
 ```
 
 ##### Advanced
@@ -53,7 +53,7 @@ None
 ---
 - hosts: all
   roles:
-    - cacti-plugin-percona
+    - oefenweb.cacti-plugin-percona
   vars:
     cacti_plugin_percona_scripts_path: /usr/share/cacti/site/scripts
     cacti_plugin_percona_import_template_php_path: /usr/share/cacti/cli/import_template.php
