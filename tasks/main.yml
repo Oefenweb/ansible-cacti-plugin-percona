@@ -17,7 +17,7 @@
     state: directory
     owner: root
     group: root
-    mode: 0755
+    mode: '0755'
   with_items:
     - "{{ cacti_plugin_percona_checkout_path | dirname }}"
     - "{{ cacti_plugin_percona_config_path }}"
@@ -40,8 +40,11 @@
     - cacti-plugin-percona-checkout
 
 - name: install  # noqa no-handler
+  when: _git_checkout is changed
+  tags:
+    - configuration
+    - cacti-plugin-percona
   block:
-
     - name: patch pmp-cacti-template
       ansible.builtin.lineinfile:
         path: "{{ cacti_plugin_percona_checkout_path }}/cacti/bin/pmp-cacti-template"
@@ -113,11 +116,6 @@
       tags:
         - cacti-plugin-percona-cleanup
         - cacti-plugin-percona-cleanup-build
-
-  when: _git_checkout is changed
-  tags:
-    - configuration
-    - cacti-plugin-percona
 
 - name: update configuration files
   ansible.builtin.template:
